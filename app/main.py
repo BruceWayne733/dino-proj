@@ -1,11 +1,17 @@
 ﻿from fastapi import Depends, FastAPI
 from sqlalchemy.orm import Session
 
+from app.bootstrap import maybe_seed_database
 from app.db import get_db
 from app.schemas import TransactionResponse, TransferRequest, WalletBalanceResponse
 from app.service import execute_transfer, get_transaction, get_user_balances
 
 app = FastAPI(title="Closed-Loop Wallet Service", version="1.0.0")
+
+
+@app.on_event("startup")
+def startup() -> None:
+    maybe_seed_database()
 
 
 @app.get("/")
@@ -74,4 +80,3 @@ def spend(payload: TransferRequest, db: Session = Depends(get_db)) -> dict:
 @app.get("/v1/transactions/{transaction_id}")
 def transaction(transaction_id: str, db: Session = Depends(get_db)) -> dict:
     return get_transaction(db, transaction_id)
-

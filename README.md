@@ -116,3 +116,20 @@ curl -X POST http://localhost:8000/v1/wallets/spends \
 - This implementation is transfer-based (closed-loop), no user-to-user transfer endpoint is exposed.
 - For internet-facing production, add authn/authz, rate limiting, structured logging, and observability.
 
+# Render Deployment
+
+This repo includes `render.yaml` for one-click Render Blueprint deploy.
+
+1. Push latest code to GitHub.
+2. In Render: New + -> Blueprint -> select this repo.
+3. Render provisions:
+   - `dino-wallet-db` (PostgreSQL)
+   - `dino-wallet-api` (Docker web service)
+4. `DATABASE_URL` is wired automatically from the DB.
+5. `AUTO_SEED=true` runs schema + seed on API startup (idempotent).
+
+After deploy, open:
+- `/health`
+- `/docs`
+
+Note: free instances may sleep when idle.
