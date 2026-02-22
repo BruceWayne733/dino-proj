@@ -34,7 +34,7 @@ def _split_sql_statements(sql_text: str) -> list[str]:
 
 
 def _run_sql_file(db: Session, path: Path) -> None:
-    sql_text = path.read_text(encoding="utf-8")
+    sql_text = path.read_text(encoding="utf-8-sig")
     for statement in _split_sql_statements(sql_text):
         db.execute(text(statement))
 
